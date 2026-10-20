@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诀 · 工具箱</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 全站景深视差背景层 -->
+<div class="site-bg" aria-hidden="true">
+  <div class="site-bg-img" id="siteBgImg"></div>
+  <div class="site-bg-veil"></div>
+</div>
+
+<div class="boot-splash" aria-hidden="true">
+  <div class="seal"><img src="sun-icon.png" alt="太阳"></div>
+  <div class="name">云栖空间</div>
+  <div class="cap">JUE SPACE</div>
+  <div class="bar"><i></i></div>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html"><img class="nav-avatar" src="avatar.jpg" alt="诀"><span class="logo-text"><b>云栖空间</b><i>工具箱</i></span></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="works.html">图库</a>
+      <a href="discover.html">发现</a>
+      <a href="tools.html" class="active">工具箱</a>
+      <a href="contact.html">联系</a>
+    </div>
+
+    <!-- 音乐胶囊播放器控件（Track / Remember） -->
+    <div class="nav-music" id="navMusic">
+      <div class="nav-music-disc" id="navMusicDisc" title="播放 / 暂停"><span class="disc-core"></span></div>
+      <div class="nav-music-info" id="navMusicInfo">
+        <div class="nav-music-meta">
+          <span class="nav-music-tag">MUSIC</span>
+          <span class="nav-music-title" title="Remember · Track 01">Remember</span>
+          <div class="nav-music-waves"><span></span><span></span><span></span></div>
+        </div>
+        <div class="nav-music-sub">
+          <span>Track 01</span>
+          <div class="nav-music-bar" id="navMusicBar"><div class="nav-music-bar-fill" id="navMusicFill"></div></div>
+          <span id="navMusicTime">0:00</span>
+        </div>
+      </div>
+      <button class="nav-music-btn" id="navMusicBtn" title="播放/暂停">▶</button>
+    </div>
+
+    <div class="nav-search"><span>🔍</span><input id="navSearch" type="text" placeholder="搜索入口、工具…"><kbd>⌘K</kbd></div>
+    <a class="nav-cta" href="tools.html">进入工具箱</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <span class="no">02</span>
+    <h1>工具箱</h1>
+    <p>全部本地运行，数据存在你自己的浏览器里</p>
+  </div>
+
+  <div class="tool-tabs">
+    <button class="tool-tab active" data-tool="pomo">🍅 番茄钟</button>
+    <button class="tool-tab" data-tool="todo">✅ 待办清单</button>
+    <button class="tool-tab" data-tool="pw">🔑 密码生成器</button>
+    <button class="tool-tab" data-tool="wc">📊 字数统计</button>
+    <button class="tool-tab" data-tool="color">🎨 颜色工具</button>
+    <button class="tool-tab" data-tool="cd">⏳ 日期倒计时</button>
+  </div>
+
+  <!-- 番茄钟 -->
+  <div class="tool-panel show" id="tool-pomo">
+    <div class="tool-title">番茄钟</div>
+    <div class="tool-desc">专注 25 分钟，休息 5 分钟。完成 4 个番茄后来个长休息。</div>
+    <div class="pomo">
+      <div class="pomo-clock">
+        <svg width="230" height="230">
+          <circle cx="115" cy="115" r="104" fill="none" stroke="#eceae4" stroke-width="8"/>
+          <circle id="pomoRing" cx="115" cy="115" r="104" fill="none" stroke="#9b8cff" stroke-width="8"
+            stroke-linecap="round" stroke-dasharray="653.45" stroke-dashoffset="0"/>
+        </svg>
+        <div class="pomo-time" id="pomoTime">25:00</div>
+        <div class="pomo-mode" id="pomoMode">专注中</div>
+      </div>
+      <div class="pomo-side">
+        <div class="pomo-modes">
+          <button class="mini-btn solid" data-pmode="focus">专注 25'</button>
+          <button class="mini-btn" data-pmode="short">短休 5'</button>
+          <button class="mini-btn" data-pmode="long">长休 15'</button>
+        </div>
+        <div class="pomo-btns">
+          <button class="mini-btn solid" id="pomoStart" style="min-width:96px">开始</button>
+          <button class="mini-btn" id="pomoReset">重置</button>
+        </div>
+        <div class="pomo-stat">今日已完成 <b id="pomoCount">0</b> 个番茄 🍅</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 待办清单 -->
+  <div class="tool-panel" id="tool-todo">
+    <div class="tool-title">待办清单</div>
+    <div class="tool-desc">回车快速添加，点击圆圈完成。自动保存在本地，关掉页面也不会丢。</div>
+    <div class="todo-add">
+      <input id="todoInput" type="text" placeholder="要做点什么？" maxlength="120">
+      <button class="mini-btn solid" id="todoAdd">添加</button>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+    <div class="todo-foot">
+      <span id="todoLeft">0 项待完成</span>
+      <button class="mini-btn danger" id="todoClear">清除已完成</button>
+    </div>
+  </div>
+
+  <!-- 密码生成器 -->
+  <div class="tool-panel" id="tool-pw">
+    <div class="tool-title">密码生成器</div>
+    <div class="tool-desc">本地随机生成，不经过任何网络。长度和字符集随意调。</div>
+    <div class="pw-out">
+      <input id="pwOut" type="text" readonly placeholder="点击「生成」">
+      <button class="mini-btn solid" id="pwGen">生成</button>
+      <button class="mini-btn" id="pwCopy">复制</button>
+    </div>
+    <div class="pw-row">
+      <label>长度 <b id="pwLenVal">16</b></label>
+      <input type="range" id="pwLen" min="6" max="40" value="16" style="flex:1;max-width:280px">
+    </div>
+    <div class="pw-opts">
+      <label><input type="checkbox" id="pwUpper" checked> 大写 A-Z</label>
+      <label><input type="checkbox" id="pwLower" checked> 小写 a-z</label>
+      <label><input type="checkbox" id="pwDigit" checked> 数字 0-9</label>
+      <label><input type="checkbox" id="pwSym" checked> 符号 !@#</label>
+    </div>
+    <div class="pw-row"><label>强度</label>
+      <div class="pw-strength" style="flex:1"><i id="pwBar"></i></div>
+      <span id="pwLabel" style="font-size:13px;color:var(--ink-2)">—</span>
+    </div>
+  </div>
+
+  <!-- 字数统计 -->
+  <div class="tool-panel" id="tool-wc">
+    <div class="tool-title">字数统计</div>
+    <div class="tool-desc">写稿、发推文、凑论文字数时的救命稻草。输入即统计。</div>
+    <textarea id="wcInput" placeholder="把文字粘进来，或者开始写……"></textarea>
+    <div class="wc-stats">
+      <div class="wc-cell"><b id="wcChars">0</b><span>字符（含空格）</span></div>
+      <div class="wc-cell"><b id="wcNoSpace">0</b><span>字符（不含空格）</span></div>
+      <div class="wc-cell"><b id="wcWords">0</b><span>英文单词</span></div>
+      <div class="wc-cell"><b id="wcChinese">0</b><span>中文字符</span></div>
+      <div class="wc-cell"><b id="wcLines">0</b><span>行数</span></div>
+      <div class="wc-cell"><b id="wcRead">0 分钟</b><span>预计阅读时长</span></div>
+    </div>
+  </div>
+
+  <!-- 颜色工具 -->
+  <div class="tool-panel" id="tool-color">
+    <div class="tool-title">颜色工具</div>
+    <div class="tool-desc">选色、HEX / RGB 互转，一键复制。下方有调色盘可以快速试色。</div>
+    <div class="color-row">
+      <div class="color-preview" id="colorPreview" style="background:#9b8cff"></div>
+      <div class="color-fields">
+        <div class="color-field">
+          <label>拾色</label>
+          <input type="color" id="colorPick" value="#9b8cff" style="padding:2px;width:56px;height:38px;cursor:pointer">
+        </div>
+        <div class="color-field"><label>HEX</label><input id="colorHex" value="#9B8CFF"><button class="mini-btn" data-copy="colorHex">复制</button></div>
+        <div class="color-field"><label>RGB</label><input id="colorRgb" value="rgb(155, 140, 255)"><button class="mini-btn" data-copy="colorRgb">复制</button></div>
+        <div class="color-field"><label>HSL</label><input id="colorHsl" value="hsl(247, 100%, 69%)"><button class="mini-btn" data-copy="colorHsl">复制</button></div>
+      </div>
+    </div>
+    <div class="swatches" id="swatches"></div>
+  </div>
+
+  <!-- 日期倒计时 -->
+  <div class="tool-panel" id="tool-cd">
+    <div class="tool-title">日期倒计时</div>
+    <div class="tool-desc">选一个目标日期，看看还剩多久。默认是今年最后一天。</div>
+    <div class="color-field" style="max-width:340px">
+      <label>目标日</label>
+      <input type="date" id="cdDate">
+    </div>
+    <div class="cd-grid">
+      <div class="cd-cell"><b id="cdD">--</b><span>天</span></div>
+      <div class="cd-cell"><b id="cdH">--</b><span>时</span></div>
+      <div class="cd-cell"><b id="cdM">--</b><span>分</span></div>
+      <div class="cd-cell"><b id="cdS">--</b><span>秒</span></div>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 诀 · 用 ❤️ 和一点点 JavaScript 手工打造</footer>
+
+<div class="toast" id="toast">已复制</div>
+
+<script>
+/* 导航搜索：回车跳回首页搜索 */
+const navInput=document.getElementById('navSearch');
+navInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&navInput.value.trim())
+    location.href='index.html?q='+encodeURIComponent(navInput.value.trim());
+});
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){
+    e.preventDefault();navInput.focus();navInput.select();
+  }
+});
+
+/* 背景景深视差效果 */
+(function(){
+  const bgImg=document.getElementById('siteBgImg');
+  if(!bgImg)return;
+  const maxX=28, maxY=18;
+  let tx=0, ty=0, cx=0, cy=0;
+  addEventListener('mousemove', e=>{
+    tx = (e.clientX / innerWidth - 0.5) * 2;
+    ty = (e.clientY / innerHeight - 0.5) * 2;
+  }, {passive:true});
+  addEventListener('deviceorientation', e=>{
+    if(e.gamma==null)return;
+    tx = Math.max(-1, Math.min(1, e.gamma / 30));
+    ty = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+  }, {passive:true});
+  let t=0;
+  (function tick(){
+    t += 0.005;
+    cx += (tx - cx) * 0.055;
+    cy += (ty - cy) * 0.055;
+    const bx = Math.sin(t) * 0.05, by = Math.cos(t * 0.8) * 0.04;
+    const px = (cx + bx) * maxX, py = (cy + by) * maxY;
+    bgImg.style.transform = 'translate3d(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px,0) scale(1.02)';
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* ===== 音乐胶囊真实音频播放器（基于 remember.mp3） ===== */
+(function(){
+  const box = document.getElementById('navMusic');
+  if(!box) return;
+  const btn = document.getElementById('navMusicBtn'),
+    disc = document.getElementById('navMusicDisc'),
+    info = document.getElementById('navMusicInfo'),
+    fill = document.getElementById('navMusicFill'),
+    bar = document.getElementById('navMusicBar'),
+    timeEl = document.getElementById('navMusicTime');
+
+  const audio = new Audio('remember.mp3');
+  audio.preload = 'metadata';
+  audio.loop = true;
+
+  function formatTime(s){
+    if(isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+
+  function updateProgress(){
+    const cur = audio.currentTime || 0;
+    const dur = audio.duration || 196;
+    timeEl.textContent = formatTime(cur);
+    fill.style.width = (dur > 0 ? (cur / dur * 100).toFixed(1) : 0) + '%';
+  }
+
+  function setPlayingState(playing){
+    box.classList.toggle('playing', playing);
+    btn.innerHTML = playing
+      ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
+  }
+
+  function togglePlay(){
+    if(audio.paused){
+      audio.play().then(()=>{
+        setPlayingState(true);
+      }).catch(err=>{
+        console.warn('播放被浏览器阻止或失败:', err);
+      });
+    } else {
+      audio.pause();
+      setPlayingState(false);
+    }
+  }
+
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('play', ()=> setPlayingState(true));
+  audio.addEventListener('pause', ()=> setPlayingState(false));
+  audio.addEventListener('ended', ()=> setPlayingState(false));
+  audio.addEventListener('loadedmetadata', updateProgress);
+
+  btn.addEventListener('click', togglePlay);
+  disc.addEventListener('click', togglePlay);
+  info.addEventListener('click', togglePlay);
+
+  if(bar){
+    bar.addEventListener('click', e=>{
+      e.stopPropagation();
+      const rect = bar.getBoundingClientRect();
+      const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const dur = audio.duration || 196;
+      audio.currentTime = pos * dur;
+      updateProgress();
+    });
+  }
+})();
+
+/* ========== Toast ========== */
+const toastEl=document.getElementById('toast');let toastT;
+function toast(msg){toastEl.textContent=msg;toastEl.classList.add('on');
+  clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('on'),1600)}
+function copyText(t){navigator.clipboard.writeText(t).then(()=>toast('已复制到剪贴板'))
+  .catch(()=>toast('复制失败，请手动选择'))}
+
+/* ========== 工具切换（同步到 URL hash，可直达分享） ========== */
+const toolTabs=[...document.querySelectorAll('.tool-tab')];
+function switchTool(name,push){
+  toolTabs.forEach(x=>x.classList.toggle('active',x.dataset.tool===name));
+  document.querySelectorAll('.tool-panel').forEach(x=>x.classList.toggle('show',x.id==='tool-'+name));
+  if(push)history.replaceState(null,'','#'+name);
+}
+toolTabs.forEach(b=>b.addEventListener('click',()=>switchTool(b.dataset.tool,true)));
+const hashTool=location.hash.slice(1);
+if(hashTool&&document.getElementById('tool-'+hashTool))switchTool(hashTool,false);
+
+/* ========== 番茄钟 ========== */
+const POMO={focus:25*60,short:5*60,long:15*60};
+const POMO_NAME={focus:'专注中',short:'短休息',long:'长休息'};
+let pomoMode='focus',pomoLeft=POMO.focus,pomoTimer=null,pomoDone=0;
+const RING=653.45;
+const pomoTime=document.getElementById('pomoTime'),pomoModeEl=document.getElementById('pomoMode'),
+  pomoRing=document.getElementById('pomoRing'),pomoStart=document.getElementById('pomoStart');
+function pomoRender(){
+  const m=String(Math.floor(pomoLeft/60)).padStart(2,'0'),s=String(pomoLeft%60).padStart(2,'0');
+  pomoTime.textContent=m+':'+s;
+  pomoRing.style.strokeDashoffset=RING*(1-pomoLeft/POMO[pomoMode]);
+  pomoRing.style.stroke=pomoMode==='focus'?'#9b8cff':pomoMode==='short'?'#0fa968':'#e8a13a';
+  pomoModeEl.textContent=POMO_NAME[pomoMode];
+  document.title=(pomoTimer?m+':'+s+' · ':'')+'诀 · 工具箱';
+}
+function pomoStop(){clearInterval(pomoTimer);pomoTimer=null;pomoStart.textContent='开始'}
+pomoStart.addEventListener('click',()=>{
+  if(pomoTimer){pomoStop();pomoRender();return}
+  pomoStart.textContent='暂停';
+  pomoTimer=setInterval(()=>{
+    pomoLeft--;
+    if(pomoLeft<=0){
+      if(pomoMode==='focus'){pomoDone++;document.getElementById('pomoCount').textContent=pomoDone;
+        toast('🍅 完成一个番茄！休息一下吧');
+        pomoSet(pomoDone%4===0?'long':'short');}
+      else{toast('休息结束，继续加油');pomoSet('focus')}
+      return;
+    }
+    pomoRender();
+  },1000);
+});
+document.getElementById('pomoReset').addEventListener('click',()=>{pomoStop();pomoLeft=POMO[pomoMode];pomoRender()});
+function pomoSet(m){pomoStop();pomoMode=m;pomoLeft=POMO[m];
+  document.querySelectorAll('[data-pmode]').forEach(b=>b.classList.toggle('solid',b.dataset.pmode===m));
+  pomoRender()}
+document.querySelectorAll('[data-pmode]').forEach(b=>b.addEventListener('click',()=>pomoSet(b.dataset.pmode)));
+pomoRender();
+
+/* ========== 待办清单 ========== */
+const TODO_KEY='jue.todos';
+let todos=JSON.parse(localStorage.getItem(TODO_KEY)||'[]');
+const todoList=document.getElementById('todoList'),todoInput=document.getElementById('todoInput');
+function todoSave(){localStorage.setItem(TODO_KEY,JSON.stringify(todos))}
+function todoRender(){
+  todoList.innerHTML='';
+  if(!todos.length){todoList.innerHTML='<div class="todo-empty">暂无待办，享受这片刻的清闲吧 ✨</div>'}
+  todos.forEach((t,i)=>{
+    const li=document.createElement('li');li.className='todo-item'+(t.done?' done':'');
+    li.innerHTML='<span class="todo-check">'+(t.done?'✓':'')+'</span><span class="txt"></span><button class="todo-del">✕</button>';
+    li.querySelector('.txt').textContent=t.text;
+    li.querySelector('.todo-check').addEventListener('click',()=>{t.done=!t.done;todoSave();todoRender()});
+    li.querySelector('.todo-del').addEventListener('click',()=>{todos.splice(i,1);todoSave();todoRender()});
+    todoList.appendChild(li);
+  });
+  document.getElementById('todoLeft').textContent=todos.filter(t=>!t.done).length+' 项待完成';
+}
+function todoAddFn(){
+  const v=todoInput.value.trim();if(!v)return;
+  todos.unshift({text:v,done:false});todoInput.value='';todoSave();todoRender();
+}
+document.getElementById('todoAdd').addEventListener('click',todoAddFn);
+todoInput.addEventListener('keydown',e=>{if(e.key==='Enter')todoAddFn()});
+document.getElementById('todoClear').addEventListener('click',()=>{
+  todos=todos.filter(t=>!t.done);todoSave();todoRender();toast('已清除完成项')});
+todoRender();
+
+/* ========== 密码生成器 ========== */
+const pwOut=document.getElementById('pwOut');
+function pwGenerate(){
+  const len=+document.getElementById('pwLen').value;
+  const sets=[];
+  if(document.getElementById('pwUpper').checked)sets.push('ABCDEFGHJKLMNPQRSTUVWXYZ');
+  if(document.getElementById('pwLower').checked)sets.push('abcdefghijkmnpqrstuvwxyz');
+  if(document.getElementById('pwDigit').checked)sets.push('23456789');
+  if(document.getElementById('pwSym').checked)sets.push('!@#$%^&*-_=+?');
+  if(!sets.length){toast('至少勾选一种字符');return}
+  const all=sets.join('');
+  const arr=new Uint32Array(len);crypto.getRandomValues(arr);
+  let pw='';for(let i=0;i<len;i++)pw+=all[arr[i]%all.length];
+  for(let i=0;i<sets.length&&i<len;i++)pw=sets[i][arr[i]%sets[i].length]+pw.slice(1);
+  pwOut.value=pw;pwStrength(pw,all.length);
+}
+function pwStrength(pw,pool){
+  const bits=pw.length*Math.log2(pool);
+  const bar=document.getElementById('pwBar'),label=document.getElementById('pwLabel');
+  let w,c,t;
+  if(bits<50){w=25;c='#e45656';t='较弱'}
+  else if(bits<75){w=55;c='#e8a13a';t='中等'}
+  else if(bits<100){w=80;c='#0fa968';t='强'}
+  else{w=100;c='#0fa968';t='非常强'}
+  bar.style.width=w+'%';bar.style.background=c;label.textContent=t+'（约 '+Math.round(bits)+' bit）';
+}
+document.getElementById('pwGen').addEventListener('click',pwGenerate);
+document.getElementById('pwCopy').addEventListener('click',()=>{if(pwOut.value)copyText(pwOut.value)});
+document.getElementById('pwLen').addEventListener('input',e=>{
+  document.getElementById('pwLenVal').textContent=e.target.value;if(pwOut.value)pwGenerate()});
+['pwUpper','pwLower','pwDigit','pwSym'].forEach(id=>
+  document.getElementById(id).addEventListener('change',()=>{if(pwOut.value)pwGenerate()}));
+pwGenerate();
+
+/* ========== 字数统计 ========== */
+const wcInput=document.getElementById('wcInput');
+wcInput.addEventListener('input',()=>{
+  const t=wcInput.value;
+  const cn=(t.match(/[\u4e00-\u9fff\u3400-\u4dbf]/g)||[]).length;
+  const words=(t.replace(/[\u4e00-\u9fff\u3400-\u4dbf]/g,' ').match(/[A-Za-z0-9'’-]+/g)||[]).length;
+  document.getElementById('wcChars').textContent=t.length;
+  document.getElementById('wcNoSpace').textContent=t.replace(/\s/g,'').length;
+  document.getElementById('wcWords').textContent=words;
+  document.getElementById('wcChinese').textContent=cn;
+  document.getElementById('wcLines').textContent=t?t.split('\n').length:0;
+  const mins=(cn/400)+(words/200);
+  document.getElementById('wcRead').textContent=mins<1?Math.ceil(mins*60)+' 秒':Math.ceil(mins)+' 分钟';
+});
+
+/* ========== 颜色工具 ========== */
+const cpick=document.getElementById('colorPick'),chex=document.getElementById('colorHex'),
+  crgb=document.getElementById('colorRgb'),chsl=document.getElementById('colorHsl'),
+  cprev=document.getElementById('colorPreview');
+function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');
+  const n=parseInt(h,16);return[n>>16&255,n>>8&255,n&255]}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b);let h=0,s=0;const l=(max+min)/2;
+  if(max!==min){const d=max-min;s=l>0.5?d/(2-max-min):d/(max+min);
+    if(max===r)h=(g-b)/d+(g<b?6:0);else if(max===g)h=(b-r)/d+2;else h=(r-g)/d+4;h/=6}
+  return[Math.round(h*360),Math.round(s*100),Math.round(l*100)]}
+function setColor(hex){
+  if(!/^#[0-9a-fA-F]{6}$/.test(hex))return;
+  const[r,g,b]=hexToRgb(hex),[h,s,l]=rgbToHsl(r,g,b);
+  cprev.style.background=hex;cpick.value=hex.toLowerCase();
+  chex.value=hex.toUpperCase();
+  crgb.value='rgb('+r+', '+g+', '+b+')';
+  chsl.value='hsl('+h+', '+s+'%, '+l+'%)';
+}
+cpick.addEventListener('input',e=>setColor(e.target.value.toUpperCase()));
+chex.addEventListener('change',e=>{let v=e.target.value.trim();
+  if(v[0]!=='#')v='#'+v;setColor(v)});
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+  copyText(document.getElementById(b.dataset.copy).value)}));
+const PALETTE=['#9b8cff','#0fa968','#e8a13a','#e45656','#8b5cf6','#ec4899','#14b8a6','#f97316',
+  '#1d2129','#64748b','#fef3c7','#dbeafe','#dcfce7','#fce7f3','#ede9fe','#ffedd5'];
+const sw=document.getElementById('swatches');
+PALETTE.forEach(c=>{const d=document.createElement('div');d.className='swatch';d.style.background=c;
+  d.title=c;d.addEventListener('click',()=>setColor(c.toUpperCase()));sw.appendChild(d)});
+
+/* ========== 日期倒计时 ========== */
+const cdDate=document.getElementById('cdDate');
+const yearEnd=new Date().getFullYear()+'-12-31';
+cdDate.value=localStorage.getItem('jue.countdown')||yearEnd;
+cdDate.addEventListener('change',()=>localStorage.setItem('jue.countdown',cdDate.value));
+setInterval(()=>{
+  const target=new Date(cdDate.value+'T00:00:00');
+  if(isNaN(target))return;
+  let diff=target-new Date();
+  const past=diff<0;diff=Math.abs(diff);
+  const d=Math.floor(diff/864e5),h=Math.floor(diff/36e5)%24,
+    m=Math.floor(diff/6e4)%60,s=Math.floor(diff/1e3)%60;
+  document.getElementById('cdD').textContent=d;
+  document.getElementById('cdH').textContent=String(h).padStart(2,'0');
+  document.getElementById('cdM').textContent=String(m).padStart(2,'0');
+  document.getElementById('cdS').textContent=String(s).padStart(2,'0');
+  document.getElementById('cdD').style.color=past?'#e45656':'';
+},1000);
+</script>
+</body>
+</html>

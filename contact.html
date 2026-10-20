@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诀 · 联系</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 全站景深视差背景层 -->
+<div class="site-bg" aria-hidden="true">
+  <div class="site-bg-img" id="siteBgImg"></div>
+  <div class="site-bg-veil"></div>
+</div>
+
+<div class="boot-splash" aria-hidden="true">
+  <div class="seal"><img src="sun-icon.png" alt="太阳"></div>
+  <div class="name">云栖空间</div>
+  <div class="cap">JUE SPACE</div>
+  <div class="bar"><i></i></div>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html"><img class="nav-avatar" src="avatar.jpg" alt="诀"><span class="logo-text"><b>云栖空间</b><i>联系</i></span></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="works.html">图库</a>
+      <a href="discover.html">发现</a>
+      <a href="tools.html">工具箱</a>
+      <a href="contact.html" class="active">联系</a>
+    </div>
+
+    <!-- 音乐胶囊播放器控件（Track / Remember） -->
+    <div class="nav-music" id="navMusic">
+      <div class="nav-music-disc" id="navMusicDisc" title="播放 / 暂停"><span class="disc-core"></span></div>
+      <div class="nav-music-info" id="navMusicInfo">
+        <div class="nav-music-meta">
+          <span class="nav-music-tag">MUSIC</span>
+          <span class="nav-music-title" title="Remember · Track 01">Remember</span>
+          <div class="nav-music-waves"><span></span><span></span><span></span></div>
+        </div>
+        <div class="nav-music-sub">
+          <span>Track 01</span>
+          <div class="nav-music-bar" id="navMusicBar"><div class="nav-music-bar-fill" id="navMusicFill"></div></div>
+          <span id="navMusicTime">0:00</span>
+        </div>
+      </div>
+      <button class="nav-music-btn" id="navMusicBtn" title="播放/暂停">▶</button>
+    </div>
+
+    <div class="nav-search"><span>🔍</span><input id="navSearch" type="text" placeholder="搜索入口、工具…"><kbd>⌘K</kbd></div>
+    <a class="nav-cta" href="tools.html">进入工具箱</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <span class="no">03</span>
+    <h1>联系</h1>
+    <p>无论是合作、交流，还是单纯打个招呼，都欢迎</p>
+  </div>
+
+  <div class="contact-card">
+    <h2>想一起做点有意思的东西？</h2>
+    <p>邮件最快，其他渠道也都在。</p>
+    <a class="btn btn-primary" href="mailto:hello@example.com">📮 给我发邮件</a>
+    <div class="contact-links">
+      <a class="btn btn-ghost" href="works.html">先看看作品</a>
+      <a class="btn btn-ghost" href="tools.html">或者玩下工具</a>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 诀 · 用 ❤️ 和一点点 JavaScript 手工打造</footer>
+
+<script>
+/* 导航搜索：本页无入口卡片，回车跳回首页搜索 */
+const navInput=document.getElementById('navSearch');
+navInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&navInput.value.trim())
+    location.href='index.html?q='+encodeURIComponent(navInput.value.trim());
+});
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){
+    e.preventDefault();navInput.focus();navInput.select();
+  }
+});
+
+/* 背景景深视差效果 */
+(function(){
+  const bgImg=document.getElementById('siteBgImg');
+  if(!bgImg)return;
+  const maxX=28, maxY=18;
+  let tx=0, ty=0, cx=0, cy=0;
+  addEventListener('mousemove', e=>{
+    tx = (e.clientX / innerWidth - 0.5) * 2;
+    ty = (e.clientY / innerHeight - 0.5) * 2;
+  }, {passive:true});
+  addEventListener('deviceorientation', e=>{
+    if(e.gamma==null)return;
+    tx = Math.max(-1, Math.min(1, e.gamma / 30));
+    ty = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+  }, {passive:true});
+  let t=0;
+  (function tick(){
+    t += 0.005;
+    cx += (tx - cx) * 0.055;
+    cy += (ty - cy) * 0.055;
+    const bx = Math.sin(t) * 0.05, by = Math.cos(t * 0.8) * 0.04;
+    const px = (cx + bx) * maxX, py = (cy + by) * maxY;
+    bgImg.style.transform = 'translate3d(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px,0) scale(1.02)';
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* ===== 音乐胶囊真实音频播放器（基于 remember.mp3） ===== */
+(function(){
+  const box = document.getElementById('navMusic');
+  if(!box) return;
+  const btn = document.getElementById('navMusicBtn'),
+    disc = document.getElementById('navMusicDisc'),
+    info = document.getElementById('navMusicInfo'),
+    fill = document.getElementById('navMusicFill'),
+    bar = document.getElementById('navMusicBar'),
+    timeEl = document.getElementById('navMusicTime');
+
+  const audio = new Audio('remember.mp3');
+  audio.preload = 'metadata';
+  audio.loop = true;
+
+  function formatTime(s){
+    if(isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+
+  function updateProgress(){
+    const cur = audio.currentTime || 0;
+    const dur = audio.duration || 196;
+    timeEl.textContent = formatTime(cur);
+    fill.style.width = (dur > 0 ? (cur / dur * 100).toFixed(1) : 0) + '%';
+  }
+
+  function setPlayingState(playing){
+    box.classList.toggle('playing', playing);
+    btn.innerHTML = playing
+      ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
+  }
+
+  function togglePlay(){
+    if(audio.paused){
+      audio.play().then(()=>{
+        setPlayingState(true);
+      }).catch(err=>{
+        console.warn('播放被浏览器阻止或失败:', err);
+      });
+    } else {
+      audio.pause();
+      setPlayingState(false);
+    }
+  }
+
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('play', ()=> setPlayingState(true));
+  audio.addEventListener('pause', ()=> setPlayingState(false));
+  audio.addEventListener('ended', ()=> setPlayingState(false));
+  audio.addEventListener('loadedmetadata', updateProgress);
+
+  btn.addEventListener('click', togglePlay);
+  disc.addEventListener('click', togglePlay);
+  info.addEventListener('click', togglePlay);
+
+  if(bar){
+    bar.addEventListener('click', e=>{
+      e.stopPropagation();
+      const rect = bar.getBoundingClientRect();
+      const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const dur = audio.duration || 196;
+      audio.currentTime = pos * dur;
+      updateProgress();
+    });
+  }
+})();
+</script>
+</body>
+</html>

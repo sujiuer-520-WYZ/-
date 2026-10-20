@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云栖空间 · 图库</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 全站景深视差背景层 -->
+<div class="site-bg" aria-hidden="true">
+  <div class="site-bg-img" id="siteBgImg"></div>
+  <div class="site-bg-veil"></div>
+</div>
+
+<div class="boot-splash" aria-hidden="true">
+  <div class="seal"><img src="sun-icon.png" alt="太阳"></div>
+  <div class="name">云栖空间</div>
+  <div class="cap">YUNQI SPACE</div>
+  <div class="bar"><i></i></div>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html"><img class="nav-avatar" src="avatar.jpg" alt="云栖"><span class="logo-text"><b>云栖空间</b><i>图库</i></span></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="works.html" class="active">图库</a>
+      <a href="discover.html">发现</a>
+      <a href="tools.html">工具箱</a>
+      <a href="contact.html">联系</a>
+    </div>
+
+    <!-- 音乐胶囊播放器控件（Track / Remember） -->
+    <div class="nav-music" id="navMusic">
+      <div class="nav-music-disc" id="navMusicDisc" title="播放 / 暂停"><span class="disc-core"></span></div>
+      <div class="nav-music-info" id="navMusicInfo">
+        <div class="nav-music-meta">
+          <span class="nav-music-tag">MUSIC</span>
+          <span class="nav-music-title" title="Remember · Track 01">Remember</span>
+          <div class="nav-music-waves"><span></span><span></span><span></span></div>
+        </div>
+        <div class="nav-music-sub">
+          <span>Track 01</span>
+          <div class="nav-music-bar" id="navMusicBar"><div class="nav-music-bar-fill" id="navMusicFill"></div></div>
+          <span id="navMusicTime">0:00</span>
+        </div>
+      </div>
+      <button class="nav-music-btn" id="navMusicBtn" title="播放/暂停">▶</button>
+    </div>
+
+    <div class="nav-search"><span>🔍</span><input id="navSearch" type="text" placeholder="搜索入口、工具…"><kbd>⌘K</kbd></div>
+    <a class="nav-cta" href="tools.html">进入工具箱</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <!-- 页面顶部标题与操作入口 -->
+  <div class="gallery-head">
+    <div class="gallery-title-box">
+      <h1>图库 <span>GALLERY</span></h1>
+      <p>收藏插画、截图与壁纸，把喜欢的画面留在云栖空间。</p>
+    </div>
+    <div class="gallery-top-actions">
+      <button class="gallery-btn" id="btnMyGallery"><span>🪟</span>我的图库</button>
+      <button class="gallery-btn primary" id="btnUploadModal"><span>⬆</span>上传图片</button>
+    </div>
+  </div>
+
+  <!-- 图库过滤控制栏 -->
+  <div class="gallery-bar">
+    <div class="gallery-bar-row1">
+      <div class="gallery-discover-title">
+        <span>发现图片</span>
+        <small id="galleryCount">共 4 张图片</small>
+      </div>
+      <div class="gallery-search-wrap">
+        <div class="gallery-search-box">
+          <span>🔍</span>
+          <input type="text" id="gallerySearchInput" placeholder="搜索名称、标签或描述…">
+          <button class="clear-btn" id="gallerySearchClear">✕</button>
+        </div>
+        <button class="gallery-random-btn" id="btnRandomView"><span>🎲</span>随机看看</button>
+      </div>
+    </div>
+
+    <div class="gallery-bar-row2">
+      <div class="gallery-tags">
+        <button class="gallery-tag-btn active" data-tag="all"><span>🖼️</span>全部图片</button>
+        <button class="gallery-tag-btn" data-tag="壁纸">壁纸</button>
+        <button class="gallery-tag-btn" data-tag="截图">截图</button>
+        <button class="gallery-tag-btn" data-tag="角色">角色</button>
+        <button class="gallery-tag-btn" data-tag="插画">插画</button>
+      </div>
+      <div class="gallery-view-opts">
+        <select class="gallery-sort-select" id="gallerySort">
+          <option value="newest">最新上传 ▾</option>
+          <option value="popular">最多点赞 ▾</option>
+          <option value="name">按名称 ▾</option>
+        </select>
+        <div class="gallery-layout-btns">
+          <button class="gallery-layout-btn active" id="layoutGrid" title="网格视图">☵</button>
+          <button class="gallery-layout-btn" id="layoutWide" title="大图视图">▢</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 图片瀑布流卡片网格 -->
+  <div class="gallery-grid" id="galleryGrid"></div>
+  <div class="hub-empty" id="galleryEmpty">没有找到符合条件的图片，换个关键词或分类试试？</div>
+</main>
+
+<!-- 上传图片弹窗模态框 -->
+<div class="gallery-modal" id="uploadModal">
+  <div class="gallery-modal-dialog">
+    <div class="gallery-modal-head">
+      <h3>上传新照片到图库</h3>
+      <button class="gallery-modal-close" id="closeUploadModal">✕</button>
+    </div>
+
+    <div class="gallery-dropzone" id="dropzone">
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+      <div class="gallery-dropzone-icon">📁</div>
+      <p>点击选择照片 或 拖拽照片到这里</p>
+      <small>支持 JPG、PNG、WebP、GIF 等格式</small>
+    </div>
+    <div style="text-align:center;margin-bottom:14px">
+      <button type="button" class="mini-btn" id="btnChooseFile" style="background:rgba(155,140,255,.2);border-color:rgba(155,140,255,.4);color:#fff">📂 从电脑中选择图片文件</button>
+    </div>
+    <img class="gallery-preview-img" id="previewImg" alt="预览">
+
+    <div class="gallery-form-group">
+      <label for="imgTitleInput">图片名称</label>
+      <input type="text" id="imgTitleInput" placeholder="给照片起个名字（选填，默认使用文件名）">
+    </div>
+
+    <div class="gallery-form-group">
+      <label for="imgTagSelect">分类标签</label>
+      <select id="imgTagSelect">
+        <option value="壁纸">壁纸</option>
+        <option value="截图">截图</option>
+        <option value="角色">角色</option>
+        <option value="插画">插画</option>
+      </select>
+    </div>
+
+    <div class="gallery-modal-foot">
+      <button class="mini-btn" id="cancelUpload">取消</button>
+      <button class="mini-btn solid" id="confirmUpload">确认加入图库</button>
+    </div>
+  </div>
+</div>
+
+<!-- 大图全屏灯箱 Lightbox -->
+<div class="gallery-lightbox" id="lightbox">
+  <button class="gallery-lightbox-close" id="closeLightbox">✕</button>
+  <img id="lightboxImg" src="" alt="大图查看">
+  <div class="gallery-lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<footer>© 2026 诀 · 云栖空间 用 ❤️ 和一点点 JavaScript 手工打造</footer>
+
+<div class="toast" id="toast">已完成</div>
+
+<script>
+/* 导航全站搜索联动 */
+const navInput = document.getElementById('navSearch');
+navInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && navInput.value.trim()) {
+    location.href = 'index.html?q=' + encodeURIComponent(navInput.value.trim());
+  }
+});
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    navInput.focus();
+    navInput.select();
+  }
+});
+
+/* 背景视差 */
+(function(){
+  const bgImg = document.getElementById('siteBgImg');
+  if (!bgImg) return;
+  const maxX = 28, maxY = 18;
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  addEventListener('mousemove', e => {
+    tx = (e.clientX / innerWidth - 0.5) * 2;
+    ty = (e.clientY / innerHeight - 0.5) * 2;
+  }, {passive:true});
+  let t = 0;
+  (function tick(){
+    t += 0.005;
+    cx += (tx - cx) * 0.055;
+    cy += (ty - cy) * 0.055;
+    const bx = Math.sin(t) * 0.05, by = Math.cos(t * 0.8) * 0.04;
+    const px = (cx + bx) * maxX, py = (cy + by) * maxY;
+    bgImg.style.transform = 'translate3d(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px,0) scale(1.02)';
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* 音乐胶囊播放器驱动 */
+(function(){
+  const box = document.getElementById('navMusic');
+  if(!box) return;
+  const btn = document.getElementById('navMusicBtn'),
+    disc = document.getElementById('navMusicDisc'),
+    info = document.getElementById('navMusicInfo'),
+    fill = document.getElementById('navMusicFill'),
+    bar = document.getElementById('navMusicBar'),
+    timeEl = document.getElementById('navMusicTime');
+
+  const audio = new Audio('remember.mp3');
+  audio.preload = 'metadata';
+  audio.loop = true;
+
+  function formatTime(s){
+    if(isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function updateProgress(){
+    const cur = audio.currentTime || 0;
+    const dur = audio.duration || 196;
+    timeEl.textContent = formatTime(cur);
+    fill.style.width = (dur > 0 ? (cur / dur * 100).toFixed(1) : 0) + '%';
+  }
+  function setPlayingState(playing){
+    box.classList.toggle('playing', playing);
+    btn.innerHTML = playing
+      ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
+  }
+  function togglePlay(){
+    if(audio.paused){
+      audio.play().then(()=> setPlayingState(true)).catch(err=> console.warn(err));
+    } else {
+      audio.pause();
+      setPlayingState(false);
+    }
+  }
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('play', ()=> setPlayingState(true));
+  audio.addEventListener('pause', ()=> setPlayingState(false));
+  audio.addEventListener('loadedmetadata', updateProgress);
+
+  btn.addEventListener('click', togglePlay);
+  disc.addEventListener('click', togglePlay);
+  info.addEventListener('click', togglePlay);
+  if(bar){
+    bar.addEventListener('click', e=>{
+      e.stopPropagation();
+      const rect = bar.getBoundingClientRect();
+      const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const dur = audio.duration || 196;
+      audio.currentTime = pos * dur;
+      updateProgress();
+    });
+  }
+})();
+
+/* ===== 图库核心数据与存储驱动 ===== */
+const DEFAULT_ITEMS = [
+  {
+    id: 'img-1',
+    title: 'IMG_20261018_223913',
+    src: 'gallery-sample-1.jpg',
+    tag: '截图',
+    user: 'star-core',
+    badge: 'Lv.4',
+    avatar: 'avatar.jpg',
+    ratio: '10 / 19',
+    likes: 0,
+    time: 1729269553000
+  },
+  {
+    id: 'img-2',
+    title: 'IMG_20261019_221058',
+    src: 'gallery-sample-2.jpg',
+    tag: '角色',
+    user: '彩P',
+    badge: 'Lv.1',
+    avatar: 'avatar.jpg',
+    ratio: '10 / 19',
+    likes: 0,
+    time: 1729354258000
+  },
+  {
+    id: 'img-3',
+    title: 'img_moment_1792333827865',
+    src: 'gallery-sample-3.jpg',
+    tag: '插画',
+    user: '彩P',
+    badge: 'Lv.1',
+    avatar: 'avatar.jpg',
+    ratio: '10 / 19',
+    likes: 0,
+    time: 1729368278000
+  },
+  {
+    id: 'img-4',
+    title: 'IMG_20260729_212342',
+    src: 'gallery-sample-4.jpg',
+    tag: '壁纸',
+    user: '辉夜',
+    badge: 'Lv.2',
+    avatar: 'avatar.jpg',
+    ratio: '10 / 19',
+    likes: 0,
+    time: 1722259422000
+  }
+];
+
+let galleryItems = DEFAULT_ITEMS.slice();
+let currentFilterTag = 'all';
+let currentSearchQuery = '';
+let currentSort = 'newest';
+let myGalleryOnly = false;
+
+// 采用 IndexedDB（无限量、异步强持久化）+ LocalStorage（备份）双通道持久化驱动
+const DB_NAME = 'YunqiGalleryDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'photos';
+
+function openPhotoDB(){
+  return new Promise((resolve, reject) => {
+    if(!window.indexedDB){
+      resolve(null);
+      return;
+    }
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = function(e){
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(STORE_NAME)){
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => resolve(null);
+  });
+}
+
+function loadPhotosFromDB(){
+  return new Promise(async (resolve) => {
+    try {
+      const db = await openPhotoDB();
+      if(!db){
+        resolve(null);
+        return;
+      }
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => resolve(null);
+    } catch(err){
+      resolve(null);
+    }
+  });
+}
+
+function savePhotoToDB(item){
+  return new Promise(async (resolve) => {
+    try {
+      const db = await openPhotoDB();
+      if(!db) return resolve(false);
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.put(item);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+    } catch(err){
+      resolve(false);
+    }
+  });
+}
+
+function removePhotoFromDB(id){
+  return new Promise(async (resolve) => {
+    try {
+      const db = await openPhotoDB();
+      if(!db) return resolve(false);
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.delete(id);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+    } catch(err){
+      resolve(false);
+    }
+  });
+}
+
+// 初始化加载图库数据（优先 IndexedDB，降级 LocalStorage）
+async function initGalleryData(){
+  let userUploads = null;
+  // 1. 尝试从 IndexedDB 加载
+  const dbData = await loadPhotosFromDB();
+  if (Array.isArray(dbData) && dbData.length > 0) {
+    userUploads = dbData;
+  } else {
+    // 2. 尝试从 localStorage 迁移或读取
+    try {
+      const raw = localStorage.getItem('yunqi_gallery_user_uploads');
+      if (raw) {
+        userUploads = JSON.parse(raw);
+        // 同步回迁进 IndexedDB
+        if(Array.isArray(userUploads)){
+          userUploads.forEach(p => savePhotoToDB(p));
+        }
+      }
+    } catch(e){
+      console.warn('读取本地 LocalStorage 受限:', e);
+    }
+  }
+
+  if (Array.isArray(userUploads) && userUploads.length > 0) {
+    // 过滤掉已经在默认列表中的重复项
+    const defaultIds = new Set(DEFAULT_ITEMS.map(x => x.id));
+    const validUploads = userUploads.filter(x => !defaultIds.has(x.id));
+    galleryItems = validUploads.concat(DEFAULT_ITEMS);
+  } else {
+    galleryItems = DEFAULT_ITEMS.slice();
+  }
+  renderGallery();
+}
+
+function saveUserUploads(){
+  const userUploads = galleryItems.filter(x => x.isMine);
+  // 双通道存储
+  userUploads.forEach(item => savePhotoToDB(item));
+  try {
+    localStorage.setItem('yunqi_gallery_user_uploads', JSON.stringify(userUploads));
+  } catch(e){
+    // 当图片量大超出5MB时，LocalStorage会静默报错，但 IndexedDB 毫发无损！
+    console.info('LocalStorage超出配额，已由 IndexedDB 保障永久保存');
+  }
+}
+initGalleryData();
+
+const gridEl = document.getElementById('galleryGrid');
+const countEl = document.getElementById('galleryCount');
+const emptyEl = document.getElementById('galleryEmpty');
+const searchInput = document.getElementById('gallerySearchInput');
+const searchClear = document.getElementById('gallerySearchClear');
+const tagBtns = document.querySelectorAll('.gallery-tag-btn');
+const sortSelect = document.getElementById('gallerySort');
+const btnMyGallery = document.getElementById('btnMyGallery');
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  setTimeout(()=> t.classList.remove('on'), 1800);
+}
+
+// 渲染图库列表
+function renderGallery(){
+  let list = galleryItems.slice();
+
+  if (myGalleryOnly) {
+    list = list.filter(item => item.isMine);
+  }
+
+  if (currentFilterTag !== 'all') {
+    list = list.filter(item => item.tag === currentFilterTag);
+  }
+
+  if (currentSearchQuery) {
+    const q = currentSearchQuery.toLowerCase();
+    list = list.filter(item => 
+      (item.title && item.title.toLowerCase().includes(q)) ||
+      (item.tag && item.tag.toLowerCase().includes(q)) ||
+      (item.user && item.user.toLowerCase().includes(q))
+    );
+  }
+
+  if (currentSort === 'newest') {
+    list.sort((a,b) => b.time - a.time);
+  } else if (currentSort === 'popular') {
+    list.sort((a,b) => b.likes - a.likes);
+  } else if (currentSort === 'name') {
+    list.sort((a,b) => (a.title || '').localeCompare(b.title || ''));
+  }
+
+  countEl.textContent = '共 ' + list.length + ' 张图片';
+
+  if (list.length === 0) {
+    gridEl.innerHTML = '';
+    emptyEl.classList.add('show');
+    return;
+  }
+  emptyEl.classList.remove('show');
+
+  gridEl.innerHTML = list.map(item => `
+    <div class="gallery-card" data-id="${item.id}">
+      <div class="gallery-card-thumb" onclick="openLightbox('${item.src}', '${escapeHtml(item.title)}')">
+        <img src="${item.src}" alt="${escapeHtml(item.title)}" loading="lazy">
+        <span class="gallery-card-tag">${escapeHtml(item.tag)}</span>
+      </div>
+      <div class="gallery-card-body">
+        <div class="gallery-card-title" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</div>
+        <div class="gallery-card-meta">
+          <div class="gallery-user">
+            <img class="gallery-user-avatar" src="${item.avatar || 'avatar.jpg'}" alt="头像">
+            <span class="gallery-user-name">${escapeHtml(item.user || '云栖')}</span>
+            <span class="gallery-user-badge">${escapeHtml(item.badge || 'Lv.1')}</span>
+          </div>
+          <span class="gallery-card-ratio">${item.ratio || '10 / 19'}</span>
+        </div>
+        <div class="gallery-card-footer">
+          <button class="gallery-like-btn ${item.liked ? 'liked' : ''}" onclick="toggleLike('${item.id}')">
+            <span>${item.liked ? '❤️' : '🤍'}</span>
+            <span>点赞 ${item.likes || 0}</span>
+          </button>
+          ${item.isMine ? `<button class="gallery-del-btn" onclick="deleteItem('${item.id}')" title="删除此照片">🗑️</button>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(str){
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.toggleLike = function(id){
+  const item = galleryItems.find(x => x.id === id);
+  if (!item) return;
+  item.liked = !item.liked;
+  item.likes = (item.likes || 0) + (item.liked ? 1 : -1);
+  saveUserUploads();
+  renderGallery();
+  toast(item.liked ? '点赞成功 ❤️' : '已取消点赞');
+};
+
+window.deleteItem = function(id){
+  if (!confirm('确定要从图库中删除这张图片吗？')) return;
+  galleryItems = galleryItems.filter(x => x.id !== id);
+  saveUserUploads();
+  renderGallery();
+  toast('已删除照片');
+};
+
+// 标签切换
+tagBtns.forEach(btn => {
+  btn.addEventListener('click', ()=>{
+    tagBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilterTag = btn.dataset.tag;
+    renderGallery();
+  });
+});
+
+// 搜索交互
+searchInput.addEventListener('input', e=>{
+  currentSearchQuery = e.target.value.trim();
+  searchClear.style.display = currentSearchQuery ? 'block' : 'none';
+  renderGallery();
+});
+searchClear.addEventListener('click', ()=>{
+  searchInput.value = '';
+  currentSearchQuery = '';
+  searchClear.style.display = 'none';
+  renderGallery();
+  searchInput.focus();
+});
+
+// 排序交互
+sortSelect.addEventListener('change', e=>{
+  currentSort = e.target.value;
+  renderGallery();
+});
+
+// 我的图库切换
+btnMyGallery.addEventListener('click', ()=>{
+  myGalleryOnly = !myGalleryOnly;
+  btnMyGallery.style.borderColor = myGalleryOnly ? 'var(--accent)' : '';
+  btnMyGallery.style.background = myGalleryOnly ? 'rgba(155,140,255,.25)' : '';
+  toast(myGalleryOnly ? '已切换为「我的图库」' : '已显示「全部图库」');
+  renderGallery();
+});
+
+// 随机看看
+document.getElementById('btnRandomView').addEventListener('click', ()=>{
+  if (galleryItems.length === 0) return;
+  const rand = galleryItems[Math.floor(Math.random() * galleryItems.length)];
+  openLightbox(rand.src, rand.title);
+});
+
+// 布局切换
+const layoutGrid = document.getElementById('layoutGrid');
+const layoutWide = document.getElementById('layoutWide');
+layoutGrid.addEventListener('click', ()=>{
+  layoutGrid.classList.add('active');
+  layoutWide.classList.remove('active');
+  gridEl.style.gridTemplateColumns = 'repeat(auto-fill,minmax(260px,1fr))';
+});
+layoutWide.addEventListener('click', ()=>{
+  layoutWide.classList.add('active');
+  layoutGrid.classList.remove('active');
+  gridEl.style.gridTemplateColumns = 'repeat(auto-fill,minmax(380px,1fr))';
+});
+
+/* ===== 上传照片模态框与拖拽上传 ===== */
+const uploadModal = document.getElementById('uploadModal');
+const btnUploadModal = document.getElementById('btnUploadModal');
+const closeUploadModal = document.getElementById('closeUploadModal');
+const cancelUpload = document.getElementById('cancelUpload');
+const confirmUpload = document.getElementById('confirmUpload');
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const previewImg = document.getElementById('previewImg');
+const imgTitleInput = document.getElementById('imgTitleInput');
+const imgTagSelect = document.getElementById('imgTagSelect');
+
+let uploadedImageDataUrl = '';
+
+function openUploadModal(){
+  uploadedImageDataUrl = '';
+  previewImg.src = '';
+  previewImg.style.display = 'none';
+  dropzone.style.display = 'block';
+  imgTitleInput.value = '';
+  uploadModal.classList.add('show');
+}
+function hideUploadModal(){
+  uploadModal.classList.remove('show');
+}
+
+btnUploadModal.addEventListener('click', openUploadModal);
+closeUploadModal.addEventListener('click', hideUploadModal);
+cancelUpload.addEventListener('click', hideUploadModal);
+
+dropzone.addEventListener('click', ()=> fileInput.click());
+const btnChooseFile = document.getElementById('btnChooseFile');
+if (btnChooseFile) {
+  btnChooseFile.addEventListener('click', ()=> fileInput.click());
+}
+
+['dragenter', 'dragover'].forEach(name =>{
+  dropzone.addEventListener(name, e=>{
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+});
+['dragleave', 'drop'].forEach(name =>{
+  dropzone.addEventListener(name, e=>{
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+  });
+});
+dropzone.addEventListener('drop', e=>{
+  const files = e.dataTransfer.files;
+  if(files && files[0]){
+    handleFile(files[0]);
+  }
+});
+fileInput.addEventListener('change', e=>{
+  if(e.target.files && e.target.files[0]){
+    handleFile(e.target.files[0]);
+  }
+});
+
+// 图像压缩处理（将大图智能缩放至合理规格，彻底避免超大 Base64 导致的浏览器卡死或存储超限）
+function compressImage(file, maxWidth, maxHeight, quality, callback){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      let w = img.width, h = img.height;
+      if (w > maxWidth || h > maxHeight) {
+        if (w / h > maxWidth / maxHeight) {
+          h = Math.round(h * (maxWidth / w));
+          w = maxWidth;
+        } else {
+          w = Math.round(w * (maxHeight / h));
+          h = maxHeight;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.85);
+      callback(dataUrl, w, h);
+    };
+    img.onerror = function(){
+      // 容错直接返回原 base64
+      callback(e.target.result, 1920, 1080);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleFile(file){
+  if(!file.type.startsWith('image/')){
+    alert('请上传图片格式文件（如 JPG、PNG、WebP 等）');
+    return;
+  }
+  toast('正在读取照片…');
+  compressImage(file, 1600, 1200, 0.88, function(dataUrl, w, h){
+    uploadedImageDataUrl = dataUrl;
+    previewImg.src = uploadedImageDataUrl;
+    previewImg.style.display = 'block';
+    dropzone.style.display = 'none';
+    if(!imgTitleInput.value){
+      imgTitleInput.value = file.name.replace(/\.[^/.]+$/, "");
+    }
+    toast('照片加载完成，点击确认即可加入图库');
+  });
+}
+
+confirmUpload.addEventListener('click', ()=>{
+  if(!uploadedImageDataUrl){
+    alert('请先选择或拖拽一张要上传的照片');
+    return;
+  }
+  const title = imgTitleInput.value.trim() || ('IMG_' + Date.now());
+  const tag = imgTagSelect.value || '壁纸';
+
+  const newItem = {
+    id: 'user-' + Date.now(),
+    title: title,
+    src: uploadedImageDataUrl,
+    tag: tag,
+    user: '云栖',
+    badge: 'Lv.9',
+    avatar: 'avatar.jpg',
+    ratio: '16 / 9',
+    likes: 1,
+    liked: true,
+    isMine: true,
+    time: Date.now()
+  };
+
+  galleryItems.unshift(newItem);
+  saveUserUploads();
+  renderGallery();
+  hideUploadModal();
+  toast('照片上传成功，已收录进图库！');
+});
+
+/* ===== 大图灯箱 Lightbox ===== */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxCaption = document.getElementById('lightboxCaption');
+const closeLightbox = document.getElementById('closeLightbox');
+
+window.openLightbox = function(src, caption){
+  lightboxImg.src = src;
+  lightboxCaption.textContent = caption || '';
+  lightbox.classList.add('show');
+};
+
+function hideLightbox(){
+  lightbox.classList.remove('show');
+}
+closeLightbox.addEventListener('click', hideLightbox);
+lightbox.addEventListener('click', e=>{
+  if(e.target === lightbox) hideLightbox();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape') hideLightbox();
+});
+
+// 初始化渲染
+renderGallery();
+</script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诀 · 发现</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 全站景深视差背景层 -->
+<div class="site-bg" aria-hidden="true">
+  <div class="site-bg-img" id="siteBgImg"></div>
+  <div class="site-bg-veil"></div>
+</div>
+
+<div class="boot-splash" aria-hidden="true">
+  <div class="seal"><img src="sun-icon.png" alt="太阳"></div>
+  <div class="name">云栖空间</div>
+  <div class="cap">JUE SPACE</div>
+  <div class="bar"><i></i></div>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html"><img class="nav-avatar" src="avatar.jpg" alt="诀"><span class="logo-text"><b>云栖空间</b><i>发现</i></span></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="works.html">图库</a>
+      <a href="discover.html" class="active">发现</a>
+      <a href="tools.html">工具箱</a>
+      <a href="contact.html">联系</a>
+    </div>
+
+    <!-- 音乐胶囊播放器控件（Track / Remember） -->
+    <div class="nav-music" id="navMusic">
+      <div class="nav-music-disc" id="navMusicDisc" title="播放 / 暂停"><span class="disc-core"></span></div>
+      <div class="nav-music-info" id="navMusicInfo">
+        <div class="nav-music-meta">
+          <span class="nav-music-tag">MUSIC</span>
+          <span class="nav-music-title" title="Remember · Track 01">Remember</span>
+          <div class="nav-music-waves"><span></span><span></span><span></span></div>
+        </div>
+        <div class="nav-music-sub">
+          <span>Track 01</span>
+          <div class="nav-music-bar" id="navMusicBar"><div class="nav-music-bar-fill" id="navMusicFill"></div></div>
+          <span id="navMusicTime">0:00</span>
+        </div>
+      </div>
+      <button class="nav-music-btn" id="navMusicBtn" title="播放/暂停">▶</button>
+    </div>
+
+    <div class="nav-search"><span>🔍</span><input id="navSearch" type="text" placeholder="搜索入口、工具…"><kbd>⌘K</kbd></div>
+    <a class="nav-cta" href="tools.html">进入工具箱</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="page-head">
+    <span class="no">EXPLORE</span>
+    <h1>发现 · 动态与灵感</h1>
+    <p>日常捕捉的想法、阅读札记、美学收藏与灵光一现</p>
+  </div>
+
+  <div class="disc-filters">
+    <button class="disc-filter active" data-type="all">全部 · All</button>
+    <button class="disc-filter" data-type="article">随笔与文章</button>
+    <button class="disc-filter" data-type="inspiration">灵感与思考</button>
+    <button class="disc-filter" data-type="resource">收藏与推荐</button>
+  </div>
+
+  <div class="disc-grid" id="discGrid">
+    <article class="disc-card" data-cat="inspiration">
+      <div class="disc-card-top">
+        <span class="disc-tag">灵感</span>
+        <span class="disc-date">2026-10-20</span>
+      </div>
+      <h3>关于“云栖”这个小站的诞生记录</h3>
+      <p>想要一个像深夜书房或月下回廊般的个人空间，能够慢慢放下自己的工具、音乐和文字。没有过载的信息流，只有干净的毛玻璃与极光色。</p>
+      <div class="disc-card-bottom">
+        <div class="disc-meta">
+          <span>☕ 3 分钟阅读</span>
+          <span>🏷️ 设计 / 心情</span>
+        </div>
+        <span class="disc-link">阅读全文 →</span>
+      </div>
+    </article>
+
+    <article class="disc-card" data-cat="article">
+      <div class="disc-card-top">
+        <span class="disc-tag">随笔</span>
+        <span class="disc-date">2026-10-18</span>
+      </div>
+      <h3>致明天，亦或者是千年后的你</h3>
+      <p>走过的路、看过的星星，在数字的海洋里其实微不足道。但如果有一小束光亮能被未来的某个人捕捉到，这就足够浪漫了。</p>
+      <div class="disc-card-bottom">
+        <div class="disc-meta">
+          <span>📜 5 分钟阅读</span>
+          <span>🏷️ 记忆 / 随想</span>
+        </div>
+        <span class="disc-link">阅读全文 →</span>
+      </div>
+    </article>
+
+    <article class="disc-card" data-cat="resource">
+      <div class="disc-card-top">
+        <span class="disc-tag">收藏</span>
+        <span class="disc-date">2026-10-15</span>
+      </div>
+      <h3>治愈系 8bit 旋律与极简电子音效清单</h3>
+      <p>收集了一些能让人迅速进入心流状态的无干扰背景音乐，包括《Remember》在内的几首轻盈曲目，写代码或看书时的最佳伴侣。</p>
+      <div class="disc-card-bottom">
+        <div class="disc-meta">
+          <span>🎧 音乐集</span>
+          <span>🏷️ BGM / 专注</span>
+        </div>
+        <span class="disc-link">查看清单 →</span>
+      </div>
+    </article>
+
+    <article class="disc-card" data-cat="inspiration">
+      <div class="disc-card-top">
+        <span class="disc-tag">思考</span>
+        <span class="disc-date">2026-10-10</span>
+      </div>
+      <h3>为什么我们依然热衷于打造个人网站？</h3>
+      <p>在算法推荐和中心化社交平台充斥的今天，一块拥有完全掌控权的小自留地，成了数字时代最舒适的避风港。</p>
+      <div class="disc-card-bottom">
+        <div class="disc-meta">
+          <span>💡 4 分钟阅读</span>
+          <span>🏷️ 独立博客 / Web</span>
+        </div>
+        <span class="disc-link">阅读全文 →</span>
+      </div>
+    </article>
+
+    <article class="disc-card" data-cat="resource">
+      <div class="disc-card-top">
+        <span class="disc-tag">资源</span>
+        <span class="disc-date">2026-10-04</span>
+      </div>
+      <h3>高质感 Web 前端配色灵感与渐变色板</h3>
+      <p>整理了一套以柔和极光为核心的 CSS 渐变色值系统，适合用来做毛玻璃（Glassmorphism）和现代深浅色卡片设计。</p>
+      <div class="disc-card-bottom">
+        <div class="disc-meta">
+          <span>🎨 色彩预设</span>
+          <span>🏷️ UI / CSS</span>
+        </div>
+        <span class="disc-link">获取色板 →</span>
+      </div>
+    </article>
+
+    <article class="disc-card" data-cat="article">
+      <div class="disc-card-top">
+        <span class="disc-tag">笔记</span>
+        <span class="disc-date">2026-09-28</span>
+      </div>
+      <h3>本地运行优先：打造无依赖的小型工具链</h3>
+      <p>无需登录、无需连接后端服务器，所有数据只存放在用户的浏览器 localStorage 里。极简，轻快且令人安心。</p>
+      <div class="disc-card-bottom">
+        <div class="disc-meta">
+          <span>⚡ 6 分钟阅读</span>
+          <span>🏷️ 技术 / 架构</span>
+        </div>
+        <span class="disc-link">阅读笔记 →</span>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer>© 2026 诀 · 用 ❤️ 和一点点 JavaScript 手工打造</footer>
+
+<script>
+/* 分类筛选交互 */
+const filterBtns = document.querySelectorAll('.disc-filter');
+const cards = document.querySelectorAll('.disc-card');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const type = btn.dataset.type;
+    cards.forEach(card => {
+      if(type === 'all' || card.dataset.cat === type){
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+/* 导航搜索：本页无入口卡片，回车跳回首页搜索 */
+const navInput = document.getElementById('navSearch');
+navInput.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && navInput.value.trim())
+    location.href = 'index.html?q=' + encodeURIComponent(navInput.value.trim());
+});
+document.addEventListener('keydown', e => {
+  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
+    e.preventDefault();
+    navInput.focus();
+    navInput.select();
+  }
+});
+
+/* 背景景深视差效果 */
+(function(){
+  const bgImg = document.getElementById('siteBgImg');
+  if(!bgImg) return;
+  const maxX = 28, maxY = 18;
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  addEventListener('mousemove', e => {
+    tx = (e.clientX / innerWidth - 0.5) * 2;
+    ty = (e.clientY / innerHeight - 0.5) * 2;
+  }, {passive:true});
+  addEventListener('deviceorientation', e => {
+    if(e.gamma == null) return;
+    tx = Math.max(-1, Math.min(1, e.gamma / 30));
+    ty = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+  }, {passive:true});
+  let t = 0;
+  (function tick(){
+    t += 0.005;
+    cx += (tx - cx) * 0.055;
+    cy += (ty - cy) * 0.055;
+    const bx = Math.sin(t) * 0.05, by = Math.cos(t * 0.8) * 0.04;
+    const px = (cx + bx) * maxX, py = (cy + by) * maxY;
+    bgImg.style.transform = 'translate3d(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px,0) scale(1.02)';
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* ===== 音乐胶囊真实音频播放器（基于 remember.mp3） ===== */
+(function(){
+  const box = document.getElementById('navMusic');
+  if(!box) return;
+  const btn = document.getElementById('navMusicBtn'),
+    disc = document.getElementById('navMusicDisc'),
+    info = document.getElementById('navMusicInfo'),
+    fill = document.getElementById('navMusicFill'),
+    bar = document.getElementById('navMusicBar'),
+    timeEl = document.getElementById('navMusicTime');
+
+  const audio = new Audio('remember.mp3');
+  audio.preload = 'metadata';
+  audio.loop = true;
+
+  function formatTime(s){
+    if(isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+
+  function updateProgress(){
+    const cur = audio.currentTime || 0;
+    const dur = audio.duration || 196;
+    timeEl.textContent = formatTime(cur);
+    fill.style.width = (dur > 0 ? (cur / dur * 100).toFixed(1) : 0) + '%';
+  }
+
+  function setPlayingState(playing){
+    box.classList.toggle('playing', playing);
+    btn.innerHTML = playing
+      ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>'
+      : '<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
+  }
+
+  function togglePlay(){
+    if(audio.paused){
+      audio.play().then(()=>{
+        setPlayingState(true);
+      }).catch(err=>{
+        console.warn('播放被浏览器阻止或失败:', err);
+      });
+    } else {
+      audio.pause();
+      setPlayingState(false);
+    }
+  }
+
+  audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('play', ()=> setPlayingState(true));
+  audio.addEventListener('pause', ()=> setPlayingState(false));
+  audio.addEventListener('ended', ()=> setPlayingState(false));
+  audio.addEventListener('loadedmetadata', updateProgress);
+
+  btn.addEventListener('click', togglePlay);
+  disc.addEventListener('click', togglePlay);
+  info.addEventListener('click', togglePlay);
+
+  if(bar){
+    bar.addEventListener('click', e=>{
+      e.stopPropagation();
+      const rect = bar.getBoundingClientRect();
+      const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const dur = audio.duration || 196;
+      audio.currentTime = pos * dur;
+      updateProgress();
+    });
+  }
+})();
+</script>
+</body>
+</html>
